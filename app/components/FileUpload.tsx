@@ -100,7 +100,7 @@ function FileUpload({
   return (
     <div className="bg-gray-800 rounded-xl p-8 border-2 border-dashed border-gray-600 text-center">
       <label htmlFor="fileInput" className="cursor-pointer">
-        <div className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium">
+        <div className="inline-block bg-gradient-to-r from-cyan-400 to-teal-500 hover:opacity-90 transition-opacity px-6 py-3 rounded-lg font-medium text-gray-900 text-sm">
           Upload Browser History JSON
         </div>
       </label>
