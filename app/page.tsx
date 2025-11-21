@@ -1,6 +1,6 @@
 "use client";
 
-import FileUpload from "./components/FileUpload";
+import HeroSection from "./components/HeroSection";
 
 export interface DailyData {
   date: Date;
@@ -30,15 +30,10 @@ export interface GoogleBrowserHistoryData {
 }
 
 export default function Home() {
-  const handleSuccess = (data: any) => {
-    console.log("Browsing history data:", data);
-    // Further processing can be done here
-  };
-
-  const handleError = (msg: string) => {
-    console.error(msg);
-    // Error handling can be done here
-  };
-
-  return <FileUpload onSuccess={handleSuccess} onError={handleError} />;
+  return (
+    <>
+      <HeroSection />
+      {/* <StatsDisplay stats={stats} /> */}
+    </>
+  );
 }
