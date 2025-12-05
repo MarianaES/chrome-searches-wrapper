@@ -8,12 +8,21 @@ import {
   Stats,
 } from "../page";
 
+export interface SearchQuery {
+  query: string;
+  count: number;
+}
+
 function FileUpload({
   onError,
   onSuccess,
 }: {
   onError: (msg: string) => void;
-  onSuccess: (data: { processedData: DailyData[]; stats: Stats }) => void;
+  onSuccess: (data: {
+    processedData: DailyData[];
+    stats: Stats;
+    topSearches: SearchQuery[];
+  }) => void;
 }) {
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -36,6 +45,21 @@ function FileUpload({
     reader.readAsText(file);
   };
 
+  const extractSearchQuery = (url: string): string | null => {
+    try {
+      const urlObj = new URL(url);
+      if (
+        urlObj.hostname.includes("google.com") &&
+        urlObj.pathname.includes("/search")
+      ) {
+        return urlObj.searchParams.get("q");
+      }
+    } catch {
+      return null;
+    }
+    return null;
+  };
+
   const processHistoryData = (data: GoogleTakeOutData) => {
     try {
       const browserHistory = data["Browser History"] || [];
@@ -49,7 +73,7 @@ function FileUpload({
       browserHistory.forEach((entry: GoogleBrowserHistoryData) => {
         if (!entry.time_usec) return;
 
-        // Covert Chrome timestamp to JS Date (microseconds to milliseconds)
+        // Convert Chrome timestamp to JS Date (microseconds to milliseconds)
         const date = new Date(entry.time_usec / 1000);
         const dateKey = date.toISOString().split("T")[0]; // YYYY-MM-DD format
 
@@ -68,6 +92,19 @@ function FileUpload({
         onError("No valid browsing history entries found.");
         return;
       }
+
+      const queryCounts: Record<string, number> = {};
+      browserHistory.forEach((entry: GoogleBrowserHistoryData) => {
+        const query = extractSearchQuery(entry.url);
+        if (query) {
+          queryCounts[query] = (queryCounts[query] || 0) + 1;
+        }
+      });
+
+      const topSearches: SearchQuery[] = Object.entries(queryCounts)
+        .map(([query, count]) => ({ query, count }))
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 10);
 
       const totalDays = processedData.length;
       const avgPerDay = Math.round(browserHistory.length / totalDays);
@@ -88,7 +125,7 @@ function FileUpload({
         minDay,
       };
 
-      onSuccess({ processedData, stats });
+      onSuccess({ processedData, stats, topSearches });
     } catch (err) {
       onError(
         `Error processing browsing history data: ${
@@ -97,6 +134,7 @@ function FileUpload({
       );
     }
   };
+
   return (
     <div className="bg-gray-800 rounded-xl p-8 border-2 border-dashed border-gray-600 text-center">
       <label htmlFor="fileInput" className="cursor-pointer">
