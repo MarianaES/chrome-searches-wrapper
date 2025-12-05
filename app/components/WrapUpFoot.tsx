@@ -14,7 +14,7 @@ function WrapUpFoot({ stats, topSearches }: WrapUpFootProps) {
   const [copied, setCopied] = useState(false);
 
   const urlSafeBase64Encode = (str: string): string => {
-    return btoa(str).replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
+    return btoa(str).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
   };
 
   const handleShare = async () => {
@@ -31,7 +31,8 @@ function WrapUpFoot({ stats, topSearches }: WrapUpFootProps) {
       };
 
       const encoded = urlSafeBase64Encode(JSON.stringify(shareData));
-      const shareUrl = `${window.location.origin}/shared/${encoded}`;
+
+      const shareUrl = `${window.location.origin}/shared?data=${encoded}`;
 
       if (navigator.share) {
         try {

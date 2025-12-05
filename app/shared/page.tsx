@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 import Link from "next/link";
 import StatsDisplay from "@/app/components/StatsDisplay";
@@ -20,20 +20,22 @@ interface SharedData {
 }
 
 export default function SharedPage() {
-  const params = useParams();
+  const searchParams = useSearchParams();
+  const encoded = searchParams.get("data") ?? null;
 
   // URL-safe base64 decode
   const urlSafeBase64Decode = (str: string): string => {
     let base64 = str.replace(/-/g, "+").replace(/_/g, "/");
-    while (base64.length % 4) {
-      base64 += "=";
-    }
+    while (base64.length % 4) base64 += "=";
     return atob(base64);
   };
 
   const { sharedData, error } = useMemo(() => {
+    if (!encoded) {
+      return { sharedData: null, error: "Missing share link data" };
+    }
+
     try {
-      const encoded = params.data as string;
       const decoded = urlSafeBase64Decode(encoded);
       const data = JSON.parse(decoded) as SharedData;
       return { sharedData: data, error: null };
@@ -41,7 +43,7 @@ export default function SharedPage() {
       console.error("Failed to decode shared data:", err);
       return { sharedData: null, error: "Invalid share link" };
     }
-  }, [params.data]);
+  }, [encoded]);
 
   if (error) {
     return (
@@ -90,7 +92,7 @@ export default function SharedPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black">
       <div className="text-center pt-16 pb-8">
-        <h1 className="text-[clamp(40px,15vw,60px)] font-black leading-none mb-4 bg-gradient-to-r from-cyan-400 via-teal-400 to-purple-500 bg-clip-text text-transparent">
+        <h1 className="text-[clamp(40px,15vw,72px)] font-black leading-none mb-8 text-center bg-gradient-to-r from-cyan-400 via-teal-400 to-purple-500 bg-clip-text text-transparent">
           2025 Wrapped
         </h1>
         <p className="text-gray-400 text-lg">
