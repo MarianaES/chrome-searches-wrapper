@@ -7,6 +7,7 @@ import FileUpload from "./components/FileUpload";
 import ActivityHeatmap from "./components/ActivityHeatMap";
 import TopSearches from "./components/TopSearches";
 import WrapUpFoot from "./components/WrapUpFoot";
+import HowToGuide from "./components/HowToGuide";
 
 export interface SearchData {
   processedData: DailyData[];
@@ -73,7 +74,13 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-10 bg-gradient-to-br from-black via-gray-900 to-black overflow-hidden">
       <HeroSection />
-      {!stats && <FileUpload onSuccess={handleSuccess} onError={handleError} />}
+      {!stats && (
+        <>
+          <FileUpload onSuccess={handleSuccess} onError={handleError} />
+
+          <HowToGuide />
+        </>
+      )}
       {processedData && <ActivityHeatmap data={processedData} />}
       {stats && <StatsDisplay stats={stats} />}
       {topSearches && <TopSearches searches={topSearches} />}
