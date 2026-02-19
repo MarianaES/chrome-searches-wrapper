@@ -3,6 +3,12 @@
 import { useState } from "react";
 import { ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
 import Image from "next/image";
+import step1 from "../../public/guide/step-1.png";
+import step2 from "../../public/guide/step-2.png";
+import step3 from "../../public/guide/step-3.png";
+import step4 from "../../public/guide/step-4.png";
+import step5 from "../../public/guide/step-5.png";
+import step6 from "../../public/guide/step-6.png";
 
 function HowToGuide() {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,21 +19,21 @@ function HowToGuide() {
       title: "Go to Google Takeout",
       description: "Navigate to takeout.google.com",
       link: "https://takeout.google.com",
-      image: "/guide/step-1.png",
+      image: step1,
     },
     {
       number: 2,
       title: "Deselect All Products",
       description:
         'Click the "Deselect all" button at the top of the product list.',
-      image: "/guide/step-2.png",
+      image: step2,
     },
     {
       number: 3,
       title: "Select Only Chrome",
       description:
         'Scroll down and find the "Chrome" product. Check the box next to Chrome.',
-      image: "/guide/step-3.png",
+      image: step3,
     },
     {
       number: 4,
@@ -38,7 +44,7 @@ function HowToGuide() {
         'In the pop-up, deselect everything except "BrowserHistory".',
         'Click "OK".',
       ],
-      image: "/guide/step-4.png",
+      image: step4,
       important: true,
     },
     {
@@ -53,7 +59,7 @@ function HowToGuide() {
         "• Size: 2 GB (or sufficient size - max is 50 GB)",
         'Click "Create export".',
       ],
-      image: "/guide/step-5.png",
+      image: step5,
     },
     {
       number: 6,
@@ -65,7 +71,7 @@ function HowToGuide() {
         "Extract the ZIP file (if applicable) and find the History.json file. Path: Takeout/Chrome/History.json",
         "Upload the History.json file to this website.",
       ],
-      image: "/guide/step-6.png",
+      image: step6,
     },
   ];
 
